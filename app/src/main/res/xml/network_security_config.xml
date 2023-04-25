@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <base-config>
+        <trust-anchors>
+            <certificates src="@raw/weelab"/>
+            <certificates src="system"/>
+        </trust-anchors>
+    </base-config>
+<!--    <domain-config cleartextTrafficPermitted="true">-->
+<!--        <domain includeSubdomains="true">localhost:8080</domain>-->
+<!--        <domain includeSubdomains="true">https://tb.weelab.io:8080</domain>-->
+<!--        <domain includeSubdomains="true">*.weelab.io</domain>-->
+<!--    </domain-config>-->
+</network-security-config>

@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Weelab3</string>
+    <string name="app_widget_description">Widget for monitoring your devices</string>
+    <string name="widget_update_label">Last updated: </string>
+    <string name="ellipsis">...</string>
+    <string name="alarm_text_intro">Device\'s alarm due to: </string>
+    <string name="image">image</string>
+    <string name="under_maintenance">Under maintenance</string>
+</resources>
