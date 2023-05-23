@@ -145,7 +145,10 @@ class TBRest(private val context: Context) {
                     val responseBody = response.body!!.string()
                     try{
                         val root = JSONObject(responseBody)
-                        val name = root.getString("name")
+                        var name = root.getString("label")
+                        if (name.isEmpty()){
+                            name = root.getString("name")
+                        }
                         singleDeviceName = name
                     }catch (_: Exception){}
 
@@ -377,7 +380,10 @@ class TBRest(private val context: Context) {
                                 e.printStackTrace()
                             }
                             /////////////////////////////////////////////// set values
-                            val deviceName = deviceData.getString("name")
+                            var deviceName = deviceData.getString("label")
+                            if (deviceName.isEmpty()){
+                                deviceName = root.getString("name")
+                            }
 
 //                            deviceAndTimeSeriesTemp.setName("$deviceName "+ (0..1000).random())//test
                             deviceAndTimeSeriesTemp.setName(deviceName)//test

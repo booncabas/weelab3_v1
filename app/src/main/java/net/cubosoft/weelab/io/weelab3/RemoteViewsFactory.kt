@@ -151,7 +151,6 @@ class RemoteViewsFactory(
         println("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLIST")
         myListDevices.clear()
         val tbrest = TBRest(mContext.applicationContext)
-        tbrest.getDevicesAndTimeSeries()
         myListDevices = tbrest.getDevicesAndTimeSeries()
     }
 

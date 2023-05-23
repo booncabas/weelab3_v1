@@ -13,27 +13,28 @@ import java.util.*
 class WeelabWorker(context: Context, userParameters: WorkerParameters) : Worker(context, userParameters) {
 
     private val myObjCount = CounterManager.getInstance(context)
-    private val objSocket = SocketManager.getInstance(context)
+//    private val objSocket = SocketManager.getInstance(context)
     private val mContext = context
     override fun doWork(): Result {
         try {
             if (myObjCount.getCounter() == 0){
                 Log.w(WEELAB_TAG,"INIT_counter_started_in_${Thread.currentThread().name}")
                 myObjCount.initCounter(Thread.currentThread().id.toString())
+//                myObjCount.initSocket()
             }
             ///////////////////////////////////////////////////
             val prefs: SharedPreferences = mContext.getSharedPreferences(SHARED_PREF_FILE_NAME, 0)
             val lastUpdatedWidgetInMillis = prefs.getLong(WEELAB_LAST_UPDATE_WIDGET_MILLIS, System.currentTimeMillis())
-            if(System.currentTimeMillis() >= lastUpdatedWidgetInMillis + 2700000) {
-                objSocket.sendBroadcastUpdate()
-            }
+//            if(System.currentTimeMillis() >= lastUpdatedWidgetInMillis + 2700000) {
+//                objSocket.sendBroadcastUpdate()
+//            }
             val c2 = Calendar.getInstance()
             val hour2 = c2.get(Calendar.HOUR_OF_DAY)
             val minute2 = c2.get(Calendar.MINUTE)
             Log.i(WEELAB_TAG, hour2.toString() + ":" + minute2.toString() + "_main_WORK_STARTED in ${Thread.currentThread().id} ${Thread.currentThread().name}")
             ///////////////////////////////////////////////////
             val prefEditor = prefs.edit()
-            for (i in 0 .. 9){
+            for (i in 0 .. 14){
                 val c = Calendar.getInstance()
                 val hour = c.get(Calendar.HOUR_OF_DAY)
                 val minute = c.get(Calendar.MINUTE)
@@ -42,23 +43,12 @@ class WeelabWorker(context: Context, userParameters: WorkerParameters) : Worker(
                 if( i == 0){
                     allTs += hour.toString() + ":" + minute.toString() + "_main_start_looooooooop*"
                 }
-                try {
-                    if (!objSocket.isSocketOpen()){
-                        objSocket.initWebSocket()
-                        Log.w(WEELAB_TAG, hour.toString() + ":" + minute.toString() + "_main_SOCKET_STARTED_in_try")
-                        allTs += hour.toString() + ":" + minute.toString() + "_main_started_in_try*"
-                    } else {
-                        allTs += hour.toString() + ":" + minute.toString() + "_main_already_open*"
-                    }
-                }catch (e: Exception){
-                    objSocket.initWebSocket()
-                    Log.w(WEELAB_TAG, hour.toString() + ":" + minute.toString() + "_main_SOCKET_STARTED_in_catch")
-                    allTs += hour.toString() + ":" + minute.toString() + "_main_started_in_catch*"
-                }
+
                 prefEditor.putString(WeelabConst.TEST_TS, allTs)
                 prefEditor.apply()
                 /////////////////////////////////////////////////
-                Thread.sleep(57000)// boon 14 minutes max, 15 should start a new one
+                val util = WeelabUtil(mContext)
+                Thread.sleep(60000)// boon 14 minutes max, 15 should start a new one
                 /////////////////////////////////////////////////
                 val idLastThread = myObjCount.getIdThreadLastUpdate() + ""
                 if(myObjCount.getIdThreadToClose() == Thread.currentThread().id.toString()){
@@ -71,12 +61,14 @@ class WeelabWorker(context: Context, userParameters: WorkerParameters) : Worker(
                     myObjCount.setIdThreadToClose(idLastThread)
                 }
                 Log.w(WEELAB_TAG,hour.toString() + ":" + minute.toString() + "_main_for_" + i + "_in ${Thread.currentThread().id} _counter_"+myObjCount.getCounter())
-//                Log.w(WEELAB_TAG,hour.toString() + ":" + minute.toString() + "_main_CCCCounter_add_in_name_${Thread.currentThread().name}_id_${Thread.currentThread().id}")
+                Log.w(WEELAB_TAG,hour.toString() + ":" + minute.toString() + "_main_CCCCounter_add_in_name_${Thread.currentThread().name}_id_${Thread.currentThread().id}")
                 myObjCount.setCounterAndName(Thread.currentThread().id.toString())
             }
             val util = WeelabUtil(mContext)
-            util.setSocketToWorkA()
-            Log.w(WEELAB_TAG,hour2.toString() + ":" + minute2.toString() + "_main_Result_work_completed_SUCCESS_in ${Thread.currentThread().id} _counter_"+myObjCount.getCounter())
+            val c3 = Calendar.getInstance()
+            val hour3 = c3.get(Calendar.HOUR_OF_DAY)
+            val minute3 = c3.get(Calendar.MINUTE)
+            Log.w(WEELAB_TAG,hour3.toString() + ":" + minute3.toString() + "_main_Result_work_completed_RETRY_in ${Thread.currentThread().id} _counter_"+myObjCount.getCounter())
             return Result.success()
         } catch (e: Exception) {
             Log.w(WEELAB_TAG,"_main_Result_work_incomplete_RETRY_in ${Thread.currentThread().id} _counter_"+myObjCount.getCounter())
@@ -86,7 +78,7 @@ class WeelabWorker(context: Context, userParameters: WorkerParameters) : Worker(
 
     override fun onStopped() {
         super.onStopped()
-        Log.w(WEELAB_TAG,"Cleanup, work_stopped_id_" + Thread.currentThread().id)
+        Log.w(WEELAB_TAG,"main_Cleanup, work_stopped_id_" + Thread.currentThread().id)
     }
 
 }

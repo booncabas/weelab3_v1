@@ -32,14 +32,20 @@ class CounterManager private constructor(context: Context) {
     private var counter: Int = 0
     private var idThreadLastUpdate: String = ""
     private var idThreadToClose: String = ""
+    private val objSocket = SocketManager.getInstance(context)
 
     fun initCounter(name: String) {
         try {
+
             idThreadLastUpdate = name
             counter++
         }catch (e: Exception){
             e.printStackTrace()
         }
+    }
+
+    fun initSocket(){
+        objSocket.startLoop()
     }
 
     fun setCounterAndName(name: String){

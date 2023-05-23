@@ -40,33 +40,8 @@ class WeelabUtil(private val context: Context) {
         Log.i("WorkInfo", WorkManager.getInstance(context.applicationContext).toString())
     }
     //////////////////////////////////////
-    fun setSocketToWorkA() {
-        val constraints: Constraints = Constraints.Builder()
-            .setRequiresCharging(false)
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .setRequiresBatteryNotLow(false)
-            .build()
-        val request = OneTimeWorkRequest.Builder(WeelabWorkerA::class.java)
-            .setConstraints(constraints)
-            .build()
-        WorkManager.getInstance(context.applicationContext)
-            .enqueueUniqueWork("weelab_work_socket_a", ExistingWorkPolicy.REPLACE, request)
-        Log.i("WorkInfo", WorkManager.getInstance(context.applicationContext).toString())
-    }
 
-    fun setSocketToWorkB() {
-        val constraints: Constraints = Constraints.Builder()
-            .setRequiresCharging(false)
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .setRequiresBatteryNotLow(false)
-            .build()
-        val request = OneTimeWorkRequest.Builder(WeelabWorkerB::class.java)
-            .setConstraints(constraints)
-            .build()
-        WorkManager.getInstance(context.applicationContext)
-            .enqueueUniqueWork("weelab_work_socket_b", ExistingWorkPolicy.REPLACE, request)
-        Log.i("WorkInfo", WorkManager.getInstance(context.applicationContext).toString())
-    }
+
     //////////////////////////////////////
 
     /*fun createNotificationChannel() {
